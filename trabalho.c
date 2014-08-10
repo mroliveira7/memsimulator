@@ -6,7 +6,7 @@ int main(){
 	
 	//variaveis
 	FILE *arq_open;
-	int numero_paginas, numero_threads, paginas;
+	int tamanho_tabela, numero_threads, paginas;
 	int i, j, cont;
 	int vetor[50];
 
@@ -19,10 +19,10 @@ int main(){
 	//extraindo todo o conteudo do arquivo
 	while(!feof(arq_open)){
 		if (cont == 1){ //armazenar numero de paginas
-			fscanf(arq_open, "%d", &numero_paginas);
+			fscanf(arq_open, "%d", &tamanho_tabela);
 
 			//criacao do vetor de paginas
-			int vetor_paginas[numero_paginas];
+			int vetor_paginas[tamanho_tabela];
 			cont++;
 			//i = 0;
 		}
@@ -31,14 +31,9 @@ int main(){
 			cont++;
 			//i = 0;
 		}
-		if(cont == 3){
-			fscanf(arq_open, "%d", &paginas);
-			vetor[i] = paginas;
-			i++;
-		}
 		
 	}
-	printf("%d\n", numero_paginas);
+	printf("%d\n", tamanho_tabela);
 	printf("%d\n", numero_threads);
 	for(j=0; j<=i; j++){
 		printf("%d ", vetor[j]);
