@@ -58,7 +58,7 @@ void * acessa_pagina(void *arg){
 	pthread_infos thread_atual = (pthread_infos) arg;
 	
 	sprintf(nome_arq, "thread-%d.txt",thread_atual->id);
-	arq_open = fopen(nome_arq, "a");
+	arq_thread = fopen(nome_arq, "a");
 
 	int acessos[] = {7,4,9,2,9,0,1,3,4}, i,j, tamanho_vetor;
 	int tamanho_tabela = thread_atual->tamanho_da_tabela;
@@ -66,14 +66,14 @@ void * acessa_pagina(void *arg){
 	tamanho_vetor = sizeof(acessos)/sizeof(int);
 	
 	//Loops para verifiação dos acessos e da tabela
-	for (int j = 0; j <tamanho_vetor ; j++){
+	for (j = 0; j <tamanho_vetor ; j++){
 		for (i = 0; i < tamanho_tabela; i++){
 			if (thread_atual->tabela[i] != acessos[j] &&  i == (tamanho_tabela-1))  //Condição para encontrar ou não um acesso
 			{
 				
 				//Aqui vai dar pagefault e vai inserir uma pagina
 				
-				fprintf(nome_arq, "%d-fault\n", acessos[j]);
+				fprintf(arq_thread, "%d-fault\n", acessos[j]);
 
 				
 				//Iteração para manipulação da tabela com FCFS
@@ -107,10 +107,10 @@ void * acessa_pagina(void *arg){
 			else
 			{
 				//Página encontrada, escreve no arquivo
-				fprintf(nome_arq, "%d-mem\n", acessos[j]);
+				fprintf(arq_thread, "%d-mem\n", acessos[j]);
 			}
 		}
 	}
-	fclose(nome_arq);
+	fclose(arq_thread);
 //	printf("Thread numero %d e referencia %d \n", thread_atual->id, thread_atual->tabela[0]);
 }
