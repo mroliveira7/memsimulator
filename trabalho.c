@@ -65,17 +65,48 @@ void * acessa_pagina(void *arg){
 
 	tamanho_vetor = sizeof(acessos)/sizeof(int);
 	
+	//Loops para verifiação dos acessos e da tabela
 	for (int j = 0; j <tamanho_vetor ; j++){
 		for (i = 0; i < tamanho_tabela; i++){
-			if (thread_atual->tabela[i] != acessos[j] &&  i == (tamanho_tabela-1)){
+			if (thread_atual->tabela[i] != acessos[j] &&  i == (tamanho_tabela-1))  //Condição para encontrar ou não um acesso
+			{
 				
 				//Aqui vai dar pagefault e vai inserir uma pagina
+				
 				fprintf(nome_arq, "%d-fault\n", acessos[j]);
+
+				
+				//Iteração para manipulação da tabela com FCFS
+				
+				if (fim_fila == 0)
+				{
+					thread_atual->tabela[fim_fila] = acessos[j];
+					fim_fila++;
+					continue;
+				}
+				else
+				{
+					if (fim_fila == tamanho_tabela-1)
+					{
+						int h;
+						for(h = 0; h < tamanho_tabela-1;h++)
+						{
+							thread_atual->tabela[h] = thread_atual->tabela[h+1];
+						}
+						thread_atual->tabela[tamanho_tabela-1] = acessos[j];
+						continue;
+					}
+					else
+					{
+						thread_atual->tabela[fim_fila] = acessos[j];
+						fim_fila++;
+					}
+				}
 
 			}
 			else
 			{
-				//encontra pagina e escreve no arquivo
+				//Página encontrada, escreve no arquivo
 				fprintf(nome_arq, "%d-mem\n", acessos[j]);
 			}
 		}
