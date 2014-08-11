@@ -11,6 +11,8 @@ typedef struct
 	int tamanho_da_tabela;
 }thread_infos, *pthread_infos;
 
+int fim_fila = 0;
+
 void * acessa_pagina(void *arg);
 
 int main(){
@@ -49,8 +51,15 @@ int main(){
 }
 
 void * acessa_pagina(void *arg){
+	
+	FILE *arq_thread;
+	char nome_arq[20];
+
 	pthread_infos thread_atual = (pthread_infos) arg;
 	
+	sprintf(nome_arq, "thread-%d.txt",thread_atual->id);
+	arq_open = fopen(nome_arq, "a");
+
 	int acessos[] = {7,4,9,2,9,0,1,3,4}, i,j, tamanho_vetor;
 	int tamanho_tabela = thread_atual->tamanho_da_tabela;
 
@@ -58,12 +67,19 @@ void * acessa_pagina(void *arg){
 	
 	for (int j = 0; j <tamanho_vetor ; j++){
 		for (i = 0; i < tamanho_tabela; i++){
-			if (thread_atual->tabela[i] != acessos[j] &&  i == tamanho_tabela)
-				//Aqui vai dar pagefault
+			if (thread_atual->tabela[i] != acessos[j] &&  i == (tamanho_tabela-1)){
+				
+				//Aqui vai dar pagefault e vai inserir uma pagina
+				fprintf(nome_arq, "%d-fault\n", acessos[j]);
+
+			}
 			else
-				//Aqui vai inserir ou encontrar uma página
+			{
+				//encontra pagina e escreve no arquivo
+				fprintf(nome_arq, "%d-mem\n", acessos[j]);
+			}
 		}
 	}
-
+	fclose(nome_arq);
 //	printf("Thread numero %d e referencia %d \n", thread_atual->id, thread_atual->tabela[0]);
 }
