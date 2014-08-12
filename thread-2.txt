@@ -1,0 +1,10 @@
+1-fault
+2-mem
+3-fault
+4-mem
+5-fault
+6-mem
+7-fault
+8-fault
+9-fault
+10-fault
